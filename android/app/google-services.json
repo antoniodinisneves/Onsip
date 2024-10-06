@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "425692534531",
+    "project_id": "onsip-1f735",
+    "storage_bucket": "onsip-1f735.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425692534531:android:b45d18dc481c3df60a3b36",
+        "android_client_info": {
+          "package_name": "onsip_android.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEPBTnkK32pMyqBHpIoF6BnNuBZ_HjVJ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

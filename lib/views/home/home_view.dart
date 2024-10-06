@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:onsip/style/colors.dart';
 import 'package:onsip/style/shapes.dart';
+import 'package:onsip/firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeView extends StatelessWidget {
   final TextEditingController _codeController = TextEditingController();
@@ -94,17 +96,49 @@ class HomeView extends StatelessWidget {
               width: 150, // Set the desired width of the button
               height: 40, // Set the desired height of the button
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   String code = _codeController.text;
+
+                  // Check if the entered code has a length of 4
                   if (code.length == 4) {
-                    // Process the 4-digit code
-                    print('Code entered: $code');
+                    // Query Firestore for the document name corresponding to the code
+                    try {
+                      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                          .collection('shops')
+                          .where('code', isEqualTo: code) // Query by the code
+                          .get();
+
+                      if (querySnapshot.docs.isNotEmpty) {
+                        // Get the document ID of the first document
+                        String documentId = querySnapshot.docs.first.id; // Get the document ID
+                        print('Document ID: $documentId');
+                        // You can show the document ID in a dialog, Snackbar, etc.
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Document ID: $documentId'),
+                        ));
+                      } else {
+                        print('No document found for the entered code.');
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('No document found for the entered code.'),
+                        ));
+                      }
+                    } on FirebaseException catch (e) {
+                      // Handle error
+                      print('Error retrieving document ID: ${e.message}');
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Error retrieving document ID: ${e.message}'),
+                      ));
+                    }
                   } else {
                     // Clear the input if the code is not 4 digits
                     _codeController.clear();
                     print('Please enter a 4-digit code.');
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Please enter a 4-digit code.'),
+                    ));
                   }
                 },
+                
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.accentColor, // Button background color
                   foregroundColor: AppColors.primaryColor, // Text color on button
